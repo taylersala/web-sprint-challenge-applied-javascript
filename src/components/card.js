@@ -1,3 +1,5 @@
+import axios from "axios";
+
 //
   // <div class="card">
   //   <div class="headline">{ headline }</div>
@@ -20,6 +22,7 @@
 
 
 const Card = (article) => {
+  // console.log('wtf', article);
   const card = document.createElement('div');
   const headline = document.createElement('div');
   const author = document.createElement('div');
@@ -52,27 +55,78 @@ const Card = (article) => {
 
 }
 
-const cardAppender = (selector) => {
-    fetch('http://localhost:5001/api/articles')
-      .then(response => response.json())
-      .then(data => {
-        const articles = data.reduce((acc, cur) => acc.concat(cur), []);
-        articles.forEach(article => {
-          const card = Card(article);
-          document.querySelector(selector).appendChild(card);
-        });
-      })
-      .catch(error => console.error(error));
-  }
+// const cardAppender = (selector) => {
+//   axios.get('http://localhost:5001/api/articles')
+//     .then(res => {
+//       console.log('result', res.data);
+//       for (let i = 0; i < res.data.length; i++){
+//         for (let key in res.data.articles){
+//         console.log();
+//         }
+//       }
+//       return
+//     });
+//   }
 
-  
-  
-  
-  
+
+// const cardAppender = (selector) => {
+//   axios.get('http://localhost:5001/api/articles')
+//     .then(res => {
+//       console.log('result', res.data);
+//       for (let i = 0; i < res.data.length; i++){
+//         for (let key in res.data[i].articles){
+//           console.log(key, res.data[i].articles[key]);
+//         }
+//       }
+//     })
+//       .catch(err => {
+//         console.error(err);
+//     })
+// }
+
+
+const cardAppender = (selector) => {
+  axios.get('http://localhost:5001/api/articles')
+    .then(res => {
+      const categories = Object.values(res.data.articles);
+      const container = document.querySelector(selector);
+      console.log('wttttt', categories);
+      categories.forEach(category => {
+        console.log('cat', category)
+       for (let i = 0; i < category.length; i++){
+        console.log('info', category[i])
+        const card = Card(category[i]);
+        container.appendChild(card)
+       }
+        // container.appendChild(card);
+        // console.log('wtf', article);
+        
+
+      });
+    })
+    .catch(err => {
+     console.log(err); 
+   })
+}
+
+cardAppender('#card-container');
+
+
+// cardAppender('#card-container');
+
+
+
+  // pay attention to data structures
+  //nested for looops
+  // looping through objects 
+
+
+// cardAppender('#card-container');
   // TASK 6
   // ---------------------
   // Implement this function that takes a css selector as its only argument.
-  // It should obtain articles from this endpoint: `http://localhost:5001/api/articles` (test it with console.log!!).
+  // It should obtain articles from this endpoint: `http://localhost:5001/api/articles` (test
+   // it with console.log!!).
   // However, the articles do not come organized in a single, neat array. Inspect the response closely!
   // Create a card from each and every article object in the response, using the Card component.
   // Append each card to the element in the DOM that matches the selector passed to the function.
